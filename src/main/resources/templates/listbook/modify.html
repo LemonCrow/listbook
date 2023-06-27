@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    body {
+      text-align: center;
+      background-color: orange;
+    }
+
+    table {
+      margin: 0 auto;
+    }
+
+    ul {
+      display: flex;
+      justify-content: center;
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 0 5px;
+    }
+  </style>
+</head>
+<body>
+<th:block th:fragment="content">
+  <h1 class="mt-4">책 수정</h1>
+  <form action="/listbook/modify" method="post">
+    <input type="hidden" name="page" th:value="${requestDTO.page}">
+    <input type="hidden" name="type" th:value="${requestDTO.type}">
+    <input type="hidden" name="keyword" th:value="${requestDTO.keyword}">
+    <div class="form-group">
+      <label>책번호</label>
+      <input type="text" class="form-control" name="idx" th:value="${dto.idx}" readonly>
+    </div>
+
+    <div class="form-group">
+      <label>책제목</label>
+      <input type="text" class="form-control" name="title" th:value="${dto.title}" >
+    </div>
+
+    <div class="form-group">
+      <label>책내용</label>
+      <textarea class="form-control" rows="5" name="detail" >[[${dto.detail}]]</textarea>
+    </div>
+
+    <div class="form-group">
+      <label>작가</label>
+      <input type="text" class="form-control" row="5" name="author" th:value="${dto.author}">
+    </div>
+    <div>
+      <label>책가격</label>
+      <input type="text" class="form-control" row="5" name="price" th:value="${dto.price}">
+    </div>
+    <div class="form-group">
+      <label>작성날짜</label>
+      <input type="text" class="form-control" name="regDate" th:value="${dto.regDate}" readonly>
+    </div>
+
+    <div class="form-group">
+      <label>수정날짜</label>
+      <input type="text" class="form-control" name="modDate" th:value="${dto.modDate}" readonly>
+    </div>
+  </form>
+  <button type="button" class="btn btn-primary modifyBtn">수정</button>
+  <a th:href="@{/listbook/list(idx = ${requestDTO.page}, type=${requestDTO.type}, keyword=${requestDTO.keyword})}">
+    <button type="button" class="btn btn-info">책 목록</button>
+  </a>
+  <button type="button" class="btn btn-danger removeBtn">삭제</button>
+
+</th:block>
+</th:block>
+<script th:inline="javascript">
+  var actionForm = $("form");
+  $(".removeBtn").click(function (){
+
+    actionForm
+            .attr("action", "/listbook/remove")
+            .attr("method", "post");
+    actionForm.submit();
+  })
+
+  $(".modifyBtn").click(function (){
+
+    if(!confirm("수정하시겠습니까?")){
+      return;
+    }
+
+    actionForm
+            .attr("action", "/listbook/modify")
+            .attr("method", "post")
+            .submit();
+  })
+  $(".listBtn").click(function (){
+    var page = $("input[name = 'page']");
+    var type = $("input[name= 'type']");
+    var keyword = $("input[name= 'keyword']");
+
+    actionForm.empty();
+
+    actionForm.append(page);
+    actionForm.append(type);
+    actionForm.append(keyword);
+
+    actionForm
+            .attr("action", "/listbook/remove")
+            .attr("method", "get");
+    actionForm.submit();
+  })
+</script>
+</body>
+</html>
